@@ -1,52 +1,43 @@
-# Call 3: Vihaan / Kiran (Counsellor: Amitabh)
-
-## 1. Call Audit
+## 2. Cleaned CRM Record
 
 ```json
 {
-  "scores": {
-    "rapport_child_praise": {"score": 0, "evidence": "Congratulations sir! Vihaan has been shortlisted for our super-exclusive Elite Phonics Accelerator batch!"},
-    "diagnosing_pain": {"score": 0, "evidence": "Sir, forget about screen time and forget about 'train' or 'truck'! That is nothing!"},
-    "curriculum_pitch": {"score": 0, "evidence": "not observed: no curriculum explanation; the counsellor spoke about company awards instead"},
-    "price_framing": {"score": 0, "evidence": "flat Rs. 4,000 off! And I will even make it a 1-on-1 private class for the price of a group batch!"},
-    "objection_handling": {"score": 0, "evidence": "Sir, forget about screen time and forget about 'train' or 'truck'! That is nothing!"},
-    "urgency_trial_close": {"score": 0, "evidence": "you must do the UPI payment in the next 5 minutes while staying on this call"},
-    "compliance_professionalism": {"score": 0, "evidence": "our system will permanently blacklist Vihaan's student ID forever!"}
-  },
-  "total_100": 0,
-  "compliance_flags": [
-    {"type": "guaranteed_outcome_exam_rank_and_reading_level", "severity": "hard", "quote": "in just 30 days Vihaan will read thick 300-page Harry Potter novels by himself and he will come Rank 1 in his school English exam!"},
-    {"type": "false_refund_promise_contradicting_policy", "severity": "hard", "quote": "I am giving you a 100% no-questions-asked full refund anytime in 6 months! Even if Vihaan attends all 48 classes"},
-    {"type": "discount_beyond_policy_limit_without_approval_code", "severity": "hard", "quote": "flat Rs. 4,000 off!"},
-    {"type": "misquoted_price_in_payment_link_vs_policy (said by parent)", "severity": "hard", "quote": "why is the link you just sent me on WhatsApp showing Rs. 5,500 when you said the fee is Rs. 9,500?"},
-    {"type": "false_product_claim_1_on_1_for_group_price", "severity": "hard", "quote": "I will even make it a 1-on-1 private class for the price of a group batch!"},
-    {"type": "threat_of_blacklisting_child_and_5_minute_pressure", "severity": "hard", "quote": "you must do the UPI payment in the next 5 minutes while staying on this call, otherwise our system will permanently blacklist Vihaan's student ID forever!"},
-    {"type": "fake_scarcity_false_exclusivity", "severity": "medium", "quote": "Vihaan has been shortlisted for our super-exclusive Elite Phonics Accelerator batch!"},
-    {"type": "unverified_company_claims", "severity": "medium", "quote": "we are backed by Shark Tank India, we have taught 50,000+ kids across 25 countries"},
-    {"type": "dismissive_tone_and_advising_to_bypass_policy", "severity": "medium", "quote": "Sir, between you and me, off the record, don't look at the website policy"},
-    {"type": "unauthorised_claim_of_hacking_manager_quota", "severity": "medium", "quote": "Because I hacked my manager's VIP scholarship quota just for you, sir—flat Rs. 4,000 off!"}
-  ],
-  "coaching": {
-    "win": "Amitabh, you quoted the correct standard fee of Rs. 9,500 for Phonics & Early Reading Champions, which matches the policy, and that is a solid base to build on.",
-    "fix": "Kiran gave you two clear concerns (screen time and Vihaan reading 'train' as 'truck'), but they were dismissed and replaced with guarantees and pressure. Next time, listen to each doubt, answer it honestly with what the demo showed, and keep to the official refund and discount terms.",
-    "better_line": "Those are fair doubts, sir. At 7, 'train' and 'truck' mix-ups are common while blending is still developing, and Ms. Simran's live practice is designed to build it step by step. Can I share what she noted today, and explain how our 14-day refund works?"
-  }
+  "intent_label": "Cold",
+  "intent_score": 1,
+  "primary_objection": "Trust_Concern",
+  "secondary_objection": null,
+  "objection_evidence": "That sounds like a fake sales promise.",
+  "child_demo_highlight": "Read the word 'train' as 'truck' at the start of the class (parent-reported).",
+  "learning_gap": "Father is worried about adding screen time for a 7-year-old who already watches cartoons on the iPad, and about Vihaan reading 'train' as 'truck'.",
+  "next_best_action": "Escalate_To_Manager",
+  "follow_up_by": null,
+  "confidence": "High",
+  "cleaned_note": "Father ended the call and asked not to be contacted again after the counsellor promised Rank 1 and Harry Potter reading in 30 days, an unauthorised discount and refund, and threatened to blacklist the child if he did not pay in 5 minutes."
 }
 ```
 
-## 2. Routing Status (guardrail result)
+## 3. Routing Status (guardrail result)
 
-- Status: ESCALATED. 6 hard compliance flags detected. Manager alerted immediately.
+- Status: ESCALATED. 6 hard compliance flags. Manager alerted immediately.
 - Score is 0/100 and capped by the hard-flag rule.
-- No automated parent messages are sent. A manager contacts the parent to correct the false refund, discount and guarantee claims.
-- Recommended manager actions: review the recording, correct the record with the parent in writing, and coach the counsellor.
-
-## 3. Cleaned CRM Record
-(Add from the CRM prompt output.)
+- Opt-out rule applied: the father said not to contact him again, so all automated WhatsApp messages are stopped. The opt-out overrides the follow-up cadence.
+- Manager actions: review the recording, decide whether to send ONE apology and correction, cancel any live payment link (the link showed Rs. 5,500 against the policy fee of Rs. 9,500), and run an internal review of the counsellor.
 
 ## 4. WhatsApp Sequence
-(Add from the WhatsApp prompt output, held for manager approval.)
+
+```json
+{
+  "stop": true,
+  "reason": "The lead is Cold and the father said 'Do not call me again!', so no automated follow-up should go out. All six hard compliance flags (guaranteed outcomes, false refund promise, unauthorised discount, misquoted price, false 1-on-1 claim, blacklist threat) have been escalated to a manager.",
+  "messages": []
+}
+```
+
+If the manager approves a single apology and correction, it may only use official terms: the Rs. 9,500 fee, no guaranteed results, a 100% refund within 14 days (up to 4 classes attended) then pro-rata, a maximum 10% discount, and no blacklisting.
 
 ## 5. Review Notes
-- This is the strongest example of the guardrails working: multiple hard flags, score 0, escalation and a message hold.
-- Verify the refund terms and discount cap against the policy CSV before quoting them to the parent.
+- Messages withheld: the opt-out request overrides the manager-approval cadence. A manager decides whether to send one apology.
+- Taxonomy change: added the primary_objection value Trust_Concern, because none of the original values fitted a trust and screen-time concern.
+- Check the system for the Rs. 5,500 payment link, the order and any discount code, and cancel any live link.
+- The 'train' and 'truck' detail and the father's praise for Ms. Simran come from the parent only.
+- Counsellor claims about hacking a manager's quota and bypassing the website policy need a separate internal review.
